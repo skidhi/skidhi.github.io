@@ -96,7 +96,7 @@ CustomBlockDefinition, exportEmbroidery, CustomHatBlockMorph*/
 
 /*jshint esversion: 11*/
 
-modules.objects = '2025-December-03';
+modules.objects = '2025-October-23';
 
 var SpriteMorph;
 var StageMorph;
@@ -1758,6 +1758,12 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             spec: 'pick random %ns to %ns',
             defaults: [1, 10],
             code: 'rand'
+        },
+        reportInput: {
+            type: 'reporter',
+            category: 'operators',
+            spec: '%n',
+            code: 'in'
         },
         reportVariadicEquals: {
             type: 'predicate',
@@ -4021,6 +4027,7 @@ SpriteMorph.prototype.blockTemplates = function (
         blocks.push('-');
         blocks.push(block('reportIsA'));
         blocks.push(block('reportVariadicIsIdentical'));
+        blocks.push(block('reportInput'));
 
         if (Process.prototype.enableJS) {
             blocks.push('-');
@@ -4134,7 +4141,7 @@ SpriteMorph.prototype.blockTemplates = function (
     return blocks;
 };
 
-// Utilities displayed in the palette
+// Utitlies displayed in the palette
 SpriteMorph.prototype.makeVariableButton = function () {
     var button, myself = this;
 
@@ -4459,16 +4466,6 @@ SpriteMorph.prototype.freshPalette = function (category) {
                 () => new BlockVisibilityDialogMorph(myself).popUp(
                     myself.world())
             );
-            if (ide.scene.template) {
-                menu.addItem(
-                    'restore palette',
-                    () => ide.stage.restoreHiddenGlobalBlocks(
-                        ide.scene.template.hide,
-                        ide.scene.template.version
-                    ),
-                    '"' + ide.scene.template.name + '"'
-                );
-            }
             menu.addLine();
             menu.addItem(
                 'make a category...',
@@ -7572,10 +7569,6 @@ SpriteMorph.prototype.moveBy = function (delta, justMe) {
 };
 
 SpriteMorph.prototype.rootForGrab = function () {
-    var stage = this.parentThatIsA(StageMorph);
-    if (stage?.tutorialMode) {
-        return stage;
-    }
     if (this.anchor) {
         return this.anchor.rootForGrab();
     }
@@ -8633,7 +8626,7 @@ SpriteMorph.prototype.usesBlockInstance = function (
     if (definition.isGlobal && !skipGlobals) {
         inDefinitions = [];
         this.parentThatIsA(StageMorph).globalBlocks.concat(
-            SpriteMorph.prototype.customizedPrimitives()
+            this.customizedPrimitives()
         ).forEach(def => {
             if (forRemoval && (definition === def)) {return; }
             if (skipBlocks && contains(skipBlocks, def)) {return; }
@@ -9800,9 +9793,6 @@ SpriteMorph.prototype.mouseLeave = function () {
 SpriteMorph.prototype.wantsDropOf = function (morph) {
     // allow myself to be the anchor of another sprite
     // by drag & drop
-    if (this.parent?.tutorialMode) {
-        return false;
-    }
     return this.enableNesting
         && morph instanceof SpriteIconMorph
         && !contains(morph.object.allParts(), this);
@@ -10065,9 +10055,6 @@ StageMorph.prototype.init = function (globals) {
 
     // Snap! API event listeners, transient
     this.messageCallbacks = {}; // name : [functions]
-
-    // Tutorial scenes, transient
-    this.tutorialMode = null; // or a scene back-pointer
 
     StageMorph.uber.init.call(this);
 
@@ -10469,9 +10456,6 @@ StageMorph.prototype.reportMouseY = function () {
 // StageMorph drag & drop
 
 StageMorph.prototype.wantsDropOf = function (aMorph) {
-    if (this.tutorialMode) {
-        return false;
-    }
     return aMorph instanceof SpriteMorph ||
         aMorph instanceof WatcherMorph ||
         aMorph instanceof ListWatcherMorph ||
@@ -11333,6 +11317,7 @@ StageMorph.prototype.blockTemplates = function (
         blocks.push('-');
         blocks.push(block('reportIsA'));
         blocks.push(block('reportVariadicIsIdentical'));
+        blocks.push(block('reportInput'));
 
         if (Process.prototype.enableJS) { // (Process.prototype.enableJS) {
             blocks.push('-');
@@ -11456,34 +11441,16 @@ StageMorph.prototype.hiddenGlobalBlocks = function () {
     
 };
 
-StageMorph.prototype.restoreHiddenGlobalBlocks = function (
-    hiddenList,
-    version // optionial snap version
-) {
+StageMorph.prototype.restoreHiddenGlobalBlocks = function (hiddenList) {
     var ide = this.parentThatIsA(IDE_Morph),
         variables = this.globalVariables(),
-        newer = SpriteMorph.prototype.newPrimitivesSince(parseFloat(version)),
         dict = {};
-
-    function hidePrimitive(selector) {
-        let migration = SpriteMorph.prototype.blockMigrations[selector],
-            id = migration ? migration.selector : selector;
-        dict[id] = true;
-    }
-
-    // primitives - make sure to take the current block, in case it was changed
-    hiddenList.at(1).map(sel => hidePrimitive(sel));
-    newer.map(sel => hidePrimitive(sel));
+    hiddenList.at(1).map(spec => dict[spec] = true);
     StageMorph.prototype.hiddenPrimitives = dict;
-
-    // global custom blocks
     this.globalBlocks.forEach(def =>
         def.isHelper = hiddenList.at(2).contains(def.abstractBlockSpec));
-
-    // global variables
     variables.names(true).forEach(name =>
         variables.vars[name].isHidden = hiddenList.at(3).contains(name));
-
     ide.flushBlocksCache();
     ide.refreshPalette();
     ide.categories.refreshEmpty();
@@ -11517,24 +11484,21 @@ StageMorph.prototype.userMenu = function () {
         'save a picture\nof the stage'
     );
     menu.addLine();
-    if (ide) {
-        menu.addItem(
-            'pen trails',
-            () => {
-                var costume =
-                    ide.currentSprite.reportPenTrailsAsCostume().copy();
-                ide.currentSprite.addCostume(costume);
-                ide.currentSprite.wearCostume(costume);
-                ide.hasChangedMedia = true;
-                ide.spriteBar.tabBar.tabTo('costumes');
-            },
-            ide.currentSprite instanceof SpriteMorph ?
-                'turn all pen trails and stamps\n' +
-                    'into a new costume for the\ncurrently selected sprite'
-                        : 'turn all pen trails and stamps\n' +
-                            'into a new background for the stage'
-        );
-    }
+    menu.addItem(
+        'pen trails',
+        () => {
+            var costume = ide.currentSprite.reportPenTrailsAsCostume().copy();
+            ide.currentSprite.addCostume(costume);
+            ide.currentSprite.wearCostume(costume);
+            ide.hasChangedMedia = true;
+            ide.spriteBar.tabBar.tabTo('costumes');
+        },
+        ide.currentSprite instanceof SpriteMorph ?
+            'turn all pen trails and stamps\n' +
+                'into a new costume for the\ncurrently selected sprite'
+                    : 'turn all pen trails and stamps\n' +
+                        'into a new background for the stage'
+    );
     if (this.trailsLog.length) {
         menu.addItem(
             'svg...',
@@ -12626,7 +12590,7 @@ StageMorph.prototype.globalBlocksSending = function (message, receiverName) {
     return all;
 };
 
-// StageMorph serialization & exporting utilities
+// StageMorph serialization & exporting utils
 
 StageMorph.prototype.toXMLString = function () {
     // answer an xml string representation of this sprite and all parts
@@ -12757,9 +12721,6 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
         sprite = SpriteMorph.prototype,
         maxHeight = (this.stage?.dimensions?.y || 360) * this.scale -
             (this.border + this.padding + 1) * 2,
-        draggable = this.stage?.tutorialMode ?
-            !this.stage.tutorialMode.disableDraggingData
-                : !sprite.disableDraggingData,
         isText,
         img,
         scaledImg,
@@ -12774,36 +12735,7 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
         }
     }
 
-    if (data instanceof BlockMorph) {
-        img = data.fullImage();
-        contents = new Morph();
-        contents.isCachingImage = true;
-        contents.bounds.setWidth(img.width);
-        contents.bounds.setHeight(img.height);
-        contents.cachedImage = img;
-
-        // support blocks to be dragged out of speech balloons:
-        contents.isDraggable = draggable;
-        contents.selectForEdit = function () {
-            var script = data.fullCopy(),
-                prepare = script.prepareToBeGrabbed,
-                ide = this.parentThatIsA(IDE_Morph)||
-                    this.world().childThatIsA(IDE_Morph);
-
-            script.prepareToBeGrabbed = function (hand) {
-                prepare.call(this, hand);
-                hand.grabOrigin = {
-                    origin: ide.palette,
-                    position: ide.palette.center()
-                };
-                this.prepareToBeGrabbed = prepare;
-            };
-
-            if (ide.isAppMode) {return; }
-            script.setPosition(this.position());
-            return script;
-        };
-    } else if (data instanceof Morph) {
+    if (data instanceof Morph) {
         if (isSnapObject(data)) {
             img = data.thumbnail(new Point(40, 40));
             contents = new Morph();
@@ -12871,7 +12803,8 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
         contents.cachedImage = img;
 
         // support costumes to be dragged out of speech balloons:
-        contents.isDraggable = draggable;
+        contents.isDraggable = !sprite.disableDraggingData;
+
         contents.selectForEdit = function () {
             var cst = data.copy(),
                 icon,
@@ -12925,7 +12858,8 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
         contents = new SymbolMorph('notes', 30);
 
         // support sounds to be dragged out of speech balloons:
-        contents.isDraggable = draggable;
+        contents.isDraggable = !sprite.disableDraggingData;
+
         contents.selectForEdit = function () {
             var snd = data.copy(),
                 icon,
@@ -12990,12 +12924,6 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
             }
         }
         contents.isDraggable = false;
-        if (!draggable) {
-            contents.forAllChildren(morph => {
-                morph.isDraggable = false;
-                morph.selectForEdit = nop;
-            });
-        }
     } else if (data instanceof Context) {
         img = data.image();
         contents = new Morph();
@@ -13014,7 +12942,8 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
         };
 
         // support blocks to be dragged out of speech balloons:
-        contents.isDraggable = draggable;
+        contents.isDraggable = !sprite.disableDraggingData;
+
         contents.selectForEdit = function () {
             var script = data.toUserBlock(),
                 prepare = script.prepareToBeGrabbed,
@@ -13212,16 +13141,16 @@ StageBubbleMorph.prototype.init = function (data, stage) {
     this.rerender();
 };
 
-// StageBubbleMorph contents formatting
+// SpriteBubbleMorph contents formatting
 
 StageBubbleMorph.prototype.dataAsMorph =
     SpriteBubbleMorph.prototype.dataAsMorph;
 
-// StageBubbleMorph scaling
+// SpriteBubbleMorph scaling
 
 StageBubbleMorph.prototype.setScale = SpriteBubbleMorph.prototype.setScale;
 
-// StageBubbleMorph layout:
+// SpriteBubbleMorph layout:
 
 StageBubbleMorph.prototype.fixLayout = SpriteBubbleMorph.prototype.fixLayout;
 
@@ -14522,10 +14451,7 @@ CellMorph.prototype.createContents = function () {
         isSameList = this.contentsMorph instanceof ListWatcherMorph
             && (this.contentsMorph.list === this.contents),
         isSameTable = this.contentsMorph instanceof TableFrameMorph
-            && (this.contentsMorph.tableMorph.table === this.contents),
-        draggable = this.parentThatIsA(StageMorph)?.tutorialMode ?
-            !this.parentThatIsA(StageMorph).tutorialMode.disableDraggingData
-                : !SpriteMorph.prototype.disableDraggingData;
+            && (this.contentsMorph.tableMorph.table === this.contents);
 
     if (this.isBig) {
         fontSize = fontSize * 1.5;
@@ -14592,7 +14518,9 @@ CellMorph.prototype.createContents = function () {
             this.version = this.contents.version;
 
             // support blocks to be dragged out of watchers:
-            this.contentsMorph.isDraggable = draggable;
+            this.contentsMorph.isDraggable =
+                !SpriteMorph.prototype.disableDraggingData;
+
             this.contentsMorph.selectForEdit = function () {
                 var script = myself.contents.toUserBlock(),
                     prepare = script.prepareToBeGrabbed,
@@ -14621,7 +14549,9 @@ CellMorph.prototype.createContents = function () {
             this.contentsMorph.cachedImage = img;
 
             // support costumes to be dragged out of watchers:
-            this.contentsMorph.isDraggable = draggable;
+            this.contentsMorph.isDraggable =
+                !SpriteMorph.prototype.disableDraggingData;
+
             this.contentsMorph.selectForEdit = function () {
                 var cst = myself.contents.copy(),
                     icon,
@@ -14649,7 +14579,9 @@ CellMorph.prototype.createContents = function () {
             this.contentsMorph = new SymbolMorph('notes', 30);
 
             // support sounds to be dragged out of watchers:
-            this.contentsMorph.isDraggable = draggable;
+            this.contentsMorph.isDraggable =
+                !SpriteMorph.prototype.disableDraggingData;
+
             this.contentsMorph.selectForEdit = function () {
                 var snd = myself.contents.copy(),
                     icon,
@@ -14699,10 +14631,6 @@ CellMorph.prototype.createContents = function () {
                 }
             }
             this.contentsMorph.isDraggable = false;
-            if (!draggable) {
-                this.contentsMorph.forAllChildren(morph =>
-                    morph.isDraggable = false);
-            }
         } else if (this.contents instanceof Color) {
             this.contentsMorph = SpriteMorph.prototype.colorSwatch(
                 this.contents,
@@ -15203,17 +15131,10 @@ WatcherMorph.prototype.mouseDoubleClick = function (pos) {
 // WatcherMorph dragging and dropping:
 
 WatcherMorph.prototype.rootForGrab = function () {
-    // prevent watchers to be dragged in presentation and tutorial mode
-    var ide = this.parentThatIsA(IDE_Morph),
-        stage;
+    // prevent watchers to be dragged in presentation mode
+    var ide = this.parentThatIsA(IDE_Morph);
     if (ide && ide.isAppMode) {
         return ide;
-    } else if (!ide) {
-        return null;
-    }
-    stage = this.parentThatIsA(StageMorph);
-    if (stage?.tutorialMode) {
-        return stage;
     }
     return this;
 };

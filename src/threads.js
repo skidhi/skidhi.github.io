@@ -66,7 +66,7 @@ CustomHatBlockMorph*/
 
 /*jshint esversion: 11, bitwise: false, evil: true*/
 
-modules.threads = '2025-December-02';
+modules.threads = '2025-October-23';
 
 var ThreadManager;
 var Process;
@@ -1496,13 +1496,6 @@ Process.prototype.evaluate = function (
             return;
         }
         return this.hyperEval(context, args);
-    }
-    if (context instanceof BlockMorph) {
-        return this.evaluate(
-            context.fullCopy().reify(),
-            new List(),
-            context instanceof CommandBlockMorph
-        );
     }
     if (!(context instanceof Context)) {
         if (isCommand) {
@@ -3850,9 +3843,9 @@ Process.prototype.reportCombine = function (list, reporter) {
                 this.returnValueToParentContext(
                     list.length() ?
                         list.at(1)
-                        : this.emptyListValueForCombine(
-                            reporter.expression.selector
-                        )
+                        : (reporter.expression.selector === 'reportJoinWords' ?
+                            ''
+                            : 0)
                 );
                 return;
             }
@@ -3892,9 +3885,9 @@ Process.prototype.reportCombine = function (list, reporter) {
                 this.returnValueToParentContext(
                     list.length() ?
                         list.at(1)
-                        : this.emptyListValueForCombine(
-                            reporter.expression.selector
-                        )
+                        : (reporter.expression.selector === 'reportJoinWords' ?
+                            ''
+                            : 0)
                 );
                 return;
             }
@@ -3999,23 +3992,6 @@ Process.prototype.canRunOptimizedForCombine = function (aContext) {
         each.selector === 'reportGetVar' &&
             contains(aContext.inputs, each.blockSpec)
     );
-};
-
-Process.prototype.emptyListValueForCombine = function (selector) {
-    switch (selector) {
-    case 'reportJoinWords':
-        return '';
-    case 'reportVariadicAnd':
-        return true;
-    case 'reportVariadicOr':
-        return false;
-    case 'reportConcatenatedLists':
-        return new List();
-    case 'reportCrossproduct':
-        return new List([new List()]);
-    default:
-        return 0;
-    }
 };
 
 Process.prototype.reportPipe = function (value, reporterList) {
@@ -5166,6 +5142,10 @@ Process.prototype.reportBasicPower = function (a, b) {
 
 Process.prototype.reportRandom = function (a, b) {
     return this.hyper(this.reportBasicRandom, a, b);
+};
+
+Process.prototype.reportInput = function (a) {
+    return a;
 };
 
 Process.prototype.reportBasicRandom = function (min, max) {
@@ -8555,8 +8535,6 @@ Process.prototype.reportBasicBlockAttribute = function (attribute, block) {
         return expr ? !!expr.isCustomBlock : false;
     case 'global?':
         return (expr && expr.isCustomBlock) ? !!expr.isGlobal : true;
-    case 'expression':
-        return expr instanceof BlockMorph ? expr.fullCopy() : '';
     case 'type':
         return ['command', 'reporter', 'predicate', 'hat'].indexOf(
             this.reportTypeOf(block)
