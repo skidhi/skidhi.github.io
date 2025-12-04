@@ -1762,7 +1762,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
         reportInput: {
             type: 'reporter',
             category: 'operators',
-            spec: '%n',
+            spec: '%s',
             code: 'in'
         },
         reportVariadicEquals: {
