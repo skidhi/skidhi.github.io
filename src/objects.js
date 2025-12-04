@@ -248,7 +248,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             only: SpriteMorph,
             type: 'command',
             category: 'motion',
-            spec: 'move %n steps',
+            spec: 'move forward %n',
             defaults: [10],
             animation: true,
             code: 'move',
