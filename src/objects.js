@@ -3720,8 +3720,7 @@ SpriteMorph.prototype.blockTemplates = function (
     if (category === 'motion') {
 
         blocks.push(block('forward'));
-        blocks.push(block('turn'));
-        blocks.push(block('turnLeft'));
+        blocks.push(block('turnany'));
         blocks.push('-');
         blocks.push(block('setHeading'));
         blocks.push(block('doFaceTowards'));
