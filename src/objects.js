@@ -260,36 +260,12 @@ SpriteMorph.prototype.primitiveBlocks = function () {
                         (fn [cos] (dir)))
                     (get steps)))))`
         },
-        turn: {
-            only: SpriteMorph,
-            type: 'command',
-            category: 'motion',
-            spec: 'turn $clockwise %n degrees',
-            defaults: [15],
-            animation: true,
-            code: 'right',
-            src: `(
-                (prim t turn angle)
-                (head (+ (dir) (get angle))))`
-        },
-        turnLeft: {
-            only: SpriteMorph,
-            type: 'command',
-            category: 'motion',
-            spec: 'turn $counterclockwise %n degrees',
-            defaults: [15],
-            animation: true,
-            code: 'left',
-            src: `(
-                (prim t turnLeft angle)
-                (head (- (dir) (get angle))))`
-        },
 		turnany: {
             only: SpriteMorph,
             type: 'command',
             category: 'motion',
             spec: 'turn %n %n degrees',
-            defaults: [15],
+            defaults: ["clockwise",15],
             animation: true,
             code: 'turnany',
             src: `(if 
