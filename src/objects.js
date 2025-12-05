@@ -284,6 +284,29 @@ SpriteMorph.prototype.primitiveBlocks = function () {
                 (prim t turnLeft angle)
                 (head (- (dir) (get angle))))`
         },
+		turnany: {
+            only: SpriteMorph,
+            type: 'command',
+            category: 'motion',
+            spec: 'turn %n %n degrees',
+            defaults: [15],
+            animation: true,
+            code: 'turnany',
+            src: `(if 
+			    (= clockwise 
+			        (get type)
+			    ) 
+			    (right 
+			        (get n)
+			    ) 
+			    (= counterclockwise 
+			        (get type)
+			    ) 
+			    (left 
+			        (get n)
+			    ) t nil
+			)`
+        },
         setHeading: {
             only: SpriteMorph,
             type: 'command',
