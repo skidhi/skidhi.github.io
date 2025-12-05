@@ -728,6 +728,14 @@ SyntaxElementMorph.prototype.labelParts = {
             back : ['back']
         }
     },
+	'%leftorright': {
+        type: 'input',
+        tags: 'read-only static',
+        menu: {
+            clockwise : ['clockwise'],
+            counterclockwise : ['counterclockwise']
+        }
+    },
     '%clrdim': {
         type: 'input',
         tags: 'read-only static',
