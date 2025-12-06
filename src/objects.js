@@ -265,7 +265,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             type: 'command',
             category: 'motion',
             spec: 'turn %leftorright %n degrees',
-            defaults: ["clockwise",15,90],
+            defaults: ["clockwise",15],
             animation: true,
             code: 'rotate',
             src: `(
