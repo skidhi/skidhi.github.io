@@ -7709,6 +7709,15 @@ SpriteMorph.prototype.angleToXY = function (x, y) {
     return angle + 90;
 };
 
+SpriteMorph.prototype.turnany = function (type, amount) {
+	if (type == 'clockwise') {
+    	this.setHeading(this.heading + (+amount || 0));
+	};
+	if (type == 'counterclockwise') {
+    	this.setHeading(this.heading - (+amount || 0));
+	};
+};
+
 SpriteMorph.prototype.turn = function (degrees) {
     this.setHeading(this.heading + (+degrees || 0));
 };
