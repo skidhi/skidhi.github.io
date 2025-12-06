@@ -253,7 +253,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             animation: true,
             code: 'move',
             src: `(
-                (prim t forward steps)
+                (prim t forward steps optional)
                 (goto (+ (pos) (*
                     (list
                         (fn [sin] (dir))
