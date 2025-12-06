@@ -7657,6 +7657,7 @@ SpriteMorph.prototype.forward = function (steps, optional, raw) {
     var dest,
         dist = steps * this.parent.scale || 0;
 	var dir = ((optional.length > 0) ? optional.asArray()[0] : this.heading)
+	alert(optional.asArray()[0], dir)
 
 	if (dist === 0 && this.isDown) { // draw a dot
         this.doDrawDot();
