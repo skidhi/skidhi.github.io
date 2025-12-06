@@ -253,12 +253,49 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             animation: true,
             code: 'move',
             src: `(
-                (prim t forward steps optional)
-                (goto (+ (pos) (*
-                    (list
-                        (fn [sin] (dir))
-                        (fn [cos] (dir)))
-                    (get steps)))))`
+			    (prim t forward steps optional) 
+			    (ifElse 
+			        (empty 
+			            (get optional)
+			        ) 
+			        (goto 
+			            (+ 
+			                (pos) 
+			                (* 
+			                    (list 
+			                        (fn [sin] 
+			                            (dir)
+			                        ) 
+			                        (fn [cos] 
+			                            (dir)
+			                        )
+			                    ) 
+			                    (get steps)
+			                )
+			            )
+			        ) 
+			        (goto 
+			            (+ 
+			                (pos) 
+			                (* 
+			                    (list 
+			                        (fn [sin] 
+			                            (item 1 
+			                                (get optional)
+			                            )
+			                        ) 
+			                        (fn [cos] 
+			                            (item 1 
+			                                (get optional)
+			                            )
+			                        )
+			                    ) 
+			                    (get steps)
+			                )
+			            )
+			        )
+			    )
+			)`
         },
 		turnany: {
             only: SpriteMorph,
@@ -7616,19 +7653,20 @@ SpriteMorph.prototype.setPosition = function (aPoint, justMe) {
     }
 };
 
-SpriteMorph.prototype.forward = function (steps, raw) {
+SpriteMorph.prototype.forward = function (steps, optional, raw) {
     var dest,
         dist = steps * this.parent.scale || 0;
+	var dir = optional.length > 0 ? optional[0] : this.heading
 
 	if (dist === 0 && this.isDown) { // draw a dot
         this.doDrawDot();
      	return;
  	} else if (dist >= 0) {
-        dest = this.position().distanceAngle(dist, this.heading);
+        dest = this.position().distanceAngle(dist, dir);
     } else {
         dest = this.position().distanceAngle(
             Math.abs(dist),
-            (this.heading - 180)
+            (dir - 180)
         );
     }
 
@@ -7647,11 +7685,11 @@ SpriteMorph.prototype.doDrawDot = function (dot = 0.1) {
     var down = this.isDown;
     dot = Math.max((this.useFlatLineEnds ? this.size : dot), 0.1);
     this.isDown = false;
-    this.forward(dot * -0.5, true); // don't shadow attributes
+    this.forward(dot * -0.5, [], true); // don't shadow attributes
     this.isDown = true;
-    this.forward(dot, true); // don't shadow attributes
+    this.forward(dot, [], true); // don't shadow attributes
     this.isDown = false;
-    this.forward(dot * -0.5, true); // don't shadow attributes
+    this.forward(dot * -0.5, [], true); // don't shadow attributes
     this.isDown = down;
 };
 
