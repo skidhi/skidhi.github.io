@@ -154,6 +154,7 @@ SpriteMorph.prototype.categories =
         'looks',
         'sound',
         'pen',
+		'events',
         'control',
         'sensing',
         'operators',
@@ -167,6 +168,7 @@ SpriteMorph.prototype.blockColor = {
     looks : new Color(143, 86, 227),
     sound : new Color(207, 74, 217),
     pen : new Color(0, 161, 120),
+	events : new Color(240, 195, 17),
     control : new Color(230, 168, 34),
     sensing : new Color(4, 148, 220),
     operators : new Color(98, 194, 19),
@@ -1140,35 +1142,35 @@ SpriteMorph.prototype.primitiveBlocks = function () {
         // Control
         receiveGo: {
             type: 'hat',
-            category: 'control',
+            category: 'events',
             spec: 'when $greenflag clicked'
         },
         receiveKey: {
             type: 'hat',
-            category: 'control',
+            category: 'events',
             spec: 'when %keyHat key pressed %keyName',
             defaults: [['space']]
         },
         receiveInteraction: {
             type: 'hat',
-            category: 'control',
+            category: 'events',
             spec: 'when I am %interaction',
             defaults: [['clicked']]
         },
         receiveMessage: {
             type: 'hat',
-            category: 'control',
+            category: 'events',
             spec: 'when I receive %msgHat %message',
             defaults: [['']] // trigger the "message" expansion to refresh
         },
         receiveCondition: {
             type: 'hat',
-            category: 'control',
+            category: 'events',
             spec: 'when %b'
         },
         receiveConditionEvent: {
             type: 'hat',
-            category: 'control',
+            category: 'events',
             spec: 'when %b'
         },
         getLastMessage: {  // retained for legacy compatibility
