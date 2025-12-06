@@ -3061,9 +3061,8 @@ SpriteMorph.prototype.blockAlternatives = {
         ['doForEach', -1]],
     receiveCondition: ['receiveConditionEvent'],
     receiveConditionEvent: ['receiveCondition'],
-    doRun: ['fork','evaluate'],
-    fork: ['doRun','evaluate'],
-	evaluate: ['fork','doRun'],
+    doRun: ['fork'],
+    fork: ['doRun'],
 
     // sensing:
     doAsk: ['bubble', 'doThink', 'doSayFor', 'doThinkFor'],
