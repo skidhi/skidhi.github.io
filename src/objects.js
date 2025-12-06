@@ -2952,8 +2952,6 @@ SpriteMorph.prototype.blockAlternatives = {
 
     // motion:
     forward: ['changeXPosition', 'changeYPosition'],
-    turn: ['turnLeft'],
-    turnLeft: ['turn'],
     doFaceTowards:  ['doGotoObject'],
     gotoXY: [['doGlide', 1]],
     doGotoObject: ['doFaceTowards'],
