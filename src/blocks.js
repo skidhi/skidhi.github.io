@@ -1211,6 +1211,13 @@ SyntaxElementMorph.prototype.labelParts = {
         tags: 'static widget',
         max: 2
     },
+	'%indirection': {
+        type: 'multi',
+        slots: ['%n'],
+        label: ['in direction'],
+        tags: 'static widget',
+        max: 1
+    },
     '%survey': {
         type: 'multi',
         slots: ['%rcv', '%s'],
