@@ -7662,11 +7662,11 @@ SpriteMorph.prototype.forward = function (steps, optional, raw) {
         this.doDrawDot();
      	return;
  	} else if (dist >= 0) {
-        dest = this.position().distanceAngle(dist, dir[0]);
+        dest = this.position().distanceAngle(dist, dir);
     } else {
         dest = this.position().distanceAngle(
             Math.abs(dist),
-            (dir[0] - 180)
+            (dir - 180)
         );
     }
 
