@@ -248,8 +248,8 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             only: SpriteMorph,
             type: 'command',
             category: 'motion',
-            spec: 'move forward %n',
-            defaults: [10],
+            spec: 'move forward %n %indirection',
+            defaults: [10,90],
             animation: true,
             code: 'move',
             src: `(
@@ -264,12 +264,12 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             only: SpriteMorph,
             type: 'command',
             category: 'motion',
-            spec: 'turn %leftorright %n degrees %indirection',
+            spec: 'turn %leftorright %n degrees',
             defaults: ["clockwise",15,90],
             animation: true,
             code: 'rotate',
             src: `(
-			    (prim t turnany type amount optional) 
+			    (prim t turnany type amount) 
 			    (if 
 			        (= 
 			            (get type) clockwise
