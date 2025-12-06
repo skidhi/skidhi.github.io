@@ -154,7 +154,6 @@ SpriteMorph.prototype.categories =
         'looks',
         'sound',
         'pen',
-		'events',
         'control',
         'sensing',
         'operators',
