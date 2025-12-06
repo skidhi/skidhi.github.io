@@ -7329,26 +7329,6 @@ HatBlockMorph.prototype.outlinePath = function(ctx, inset) {
         sp = Math.min(s * 1.7, this.width() - this.corner),
         pos = this.position();
 
-
-    // top arc:
-    ctx.moveTo(inset, h + this.corner);
-    ctx.arc(
-        s / 2,
-        r,
-        r,
-        radians(-sa - 90),
-        radians(-90),
-        false
-    );
-    ctx.bezierCurveTo(
-        s,
-        0,
-        s,
-        h,
-        sp,
-        h
-    );
-
     // top right:
     ctx.arc(
         this.width() - this.corner,
