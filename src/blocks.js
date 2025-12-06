@@ -7331,6 +7331,15 @@ HatBlockMorph.prototype.outlinePath = function(ctx, inset) {
 
     // top right:
     ctx.arc(
+        this.corner,
+        h + this.corner,
+        radius,
+        radians(-180),
+        radians(-90),
+        false
+    );
+
+	ctx.arc(
         this.width() - this.corner,
         h + this.corner,
         radius,
