@@ -1180,19 +1180,19 @@ SpriteMorph.prototype.primitiveBlocks = function () {
         },
         doBroadcast: {
             type: 'command',
-            category: 'control',
+            category: 'events',
             spec: 'broadcast %msg %receive',
             code: 'send'
         },
         doBroadcastAndWait: {
             type: 'command',
-            category: 'control',
+            category: 'events',
             spec: 'broadcast %msg %receive and wait',
             code: 'sendAll'
         },
         reportPoll: {
             type: 'reporter',
-            category: 'control',
+            category: 'events',
             spec: 'request %msg %survey',
             code: 'request'
         },
