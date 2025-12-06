@@ -264,24 +264,31 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             only: SpriteMorph,
             type: 'command',
             category: 'motion',
-            spec: 'turn %n %n degrees',
+            spec: 'turn %leftorright %n degrees',
             defaults: ["clockwise",15],
             animation: true,
-            code: 'turnany',
-            src: `(if 
-			    (= clockwise 
-			        (get type)
-			    ) 
-			    (right 
-			        (get n)
-			    ) 
-			    (= counterclockwise 
-			        (get type)
-			    ) 
-			    (left 
-			        (get n)
-			    ) t nil
-			)`
+            code: 'rotate',
+            src: `(prim t turnany type amount)
+					(if 
+					    (= 
+					        (get type) clockwise
+					    ) 
+					    (head 
+					        (+ 
+					            (dir) 
+					            (get amount)
+					        )
+					    ) 
+					    (= 
+					        (get type) counterclockwise
+					    ) 
+					    (head 
+					        (- 
+					            (dir) 
+					            (get amount)
+					        )
+					    ) t nil
+					)`
         },
         setHeading: {
             only: SpriteMorph,
