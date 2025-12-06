@@ -269,31 +269,31 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             animation: true,
             code: 'rotate',
             src: `(
-    (prim t turnany) 
-    (if 
-        (= 
-            (get type) clockwise
-        ) 
-        (head 
-            (+ 
-                (dir) 
-                (get amount)
-            )
-        ) 
-        (= 
-            (get type) counterclockwise
-        ) 
-        (head 
-            (- 
-                (dir) 
-                (get amount)
-            )
-        ) t 
-        (head 
-            (dir)
-        )
-    )
-)`
+			    (prim t turnany type amount) 
+			    (if 
+			        (= 
+			            (get type) clockwise
+			        ) 
+			        (head 
+			            (+ 
+			                (dir) 
+			                (get amount)
+			            )
+			        ) 
+			        (= 
+			            (get type) counterclockwise
+			        ) 
+			        (head 
+			            (- 
+			                (dir) 
+			                (get amount)
+			            )
+			        ) t 
+			        (head 
+			            (dir)
+			        )
+			    )
+			)`
         },
         setHeading: {
             only: SpriteMorph,
