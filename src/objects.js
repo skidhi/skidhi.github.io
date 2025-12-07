@@ -7657,7 +7657,7 @@ SpriteMorph.prototype.setPosition = function (aPoint, justMe) {
 SpriteMorph.prototype.forward = function (steps, optional, raw) {
     var dest,
         dist = steps * this.parent.scale || 0;
-	var dir = ((optional.asArray().length > 0) ? optional.asArray()[0] : this.heading)
+	var dir = ((optional.asArray().length > 0) ? ((optional.asArray()[0] == 'random') ? Math.floor(Math.random() * 359) : optional.asArray()[0]) : this.heading)
 
 	if (dist === 0 && this.isDown) { // draw a dot
         this.doDrawDot();
