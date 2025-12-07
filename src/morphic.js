@@ -2409,6 +2409,8 @@ Color.prototype.set_hsl = function (h, s, l) {
 
 // Color mixing:
 
+MorphicPreferences.isFlat = true;
+
 Color.prototype.mixed = function (proportion, otherColor) {
     // answer a copy of this color mixed with another color, ignore alpha
     var frac1 = Math.min(Math.max(proportion, 0), 1),
