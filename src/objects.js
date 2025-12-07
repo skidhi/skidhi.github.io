@@ -254,7 +254,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             animation: true,
             code: 'move',
             src: `(
-			    (prim t forward steps optional) 
+			    (prim t turnany) 
 			    (ifElse 
 			        (empty 
 			            (get optional)
@@ -273,6 +273,18 @@ SpriteMorph.prototype.primitiveBlocks = function () {
 			                    ) 
 			                    (get steps)
 			                )
+			            )
+			        ) (
+			        (set optional 
+			            (ifThen 
+			                (= 
+			                    (get optional) 
+			                    (list random)
+			                ) 
+			                (list 
+			                    (rand 0 359)
+			                ) 
+			                (get optional)
 			            )
 			        ) 
 			        (goto 
@@ -295,6 +307,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
 			                )
 			            )
 			        )
+			    )
 			    )
 			)`
         },
