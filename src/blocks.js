@@ -5431,15 +5431,19 @@ BlockMorph.prototype.render = function (ctx) {
         ctx.closePath();
         ctx.fill();
     } else {
-        // draw the flat shape
-        ctx.fillStyle = this.cachedClr;
+        // draw the outline
+        ctx.fillStyle = this.cachedClrDark;
         ctx.beginPath();
         this.outlinePath(ctx, 0);
         ctx.closePath();
         ctx.fill();
 
-        // add 3D-Effect:
-        this.drawEdges(ctx);
+        // draw the inner filled shaped
+        ctx.fillStyle = this.cachedClr;
+        ctx.beginPath();
+        this.outlinePath(ctx, this.flatEdge);
+        ctx.closePath();
+        ctx.fill();
     }
 
     // draw infinity / chain link icon if applicable
