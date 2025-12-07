@@ -1213,7 +1213,7 @@ SyntaxElementMorph.prototype.labelParts = {
     },
 	'%indirection': {
         type: 'multi',
-        slots: ['%n'],
+        slots: ['%dir'],
         label: ['in direction'],
         tags: 'static widget',
         max: 1
