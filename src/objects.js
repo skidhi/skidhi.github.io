@@ -673,6 +673,12 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             defaults: [localize('Hmm...')],
             code: 'think'
         },
+        returnBubble: {
+            type: 'command',
+            category: 'looks',
+            spec: 'bubble text',
+            code: 'bubbletext'
+        },
         changeEffect: {
             type: 'command',
             category: 'looks',
