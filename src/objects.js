@@ -3822,6 +3822,7 @@ SpriteMorph.prototype.blockTemplates = function (
         blocks.push(block('bubble'));
         blocks.push(block('doThinkFor'));
         blocks.push(block('doThink'));
+		blocks.push(block('bubbletext'));
         blocks.push('-');
         blocks.push(block('reportGetImageAttribute'));
         blocks.push(block('reportNewCostumeStretched'));
@@ -7392,6 +7393,9 @@ SpriteMorph.prototype.talkBubble = function () {
         morph => morph instanceof SpeechBubbleMorph
     );
 };
+
+SpriteMorph.prototype.bubbletext = function () {var bubble = this.talkBubble(
+); return ((bubble instanceof SpeechBubbleMorph) ? bubble.data : '');};
 
 SpriteMorph.prototype.positionTalkBubble = function () {
     var stage = this.parentThatIsA(StageMorph),
