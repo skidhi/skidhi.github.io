@@ -8131,28 +8131,7 @@ IDE_Morph.prototype.looksMenuData = function () {
         ],
         this.defaultLooks
     );
-    menu.addItem(
-        [
-            MorphicPreferences.isFlat && IDE_Morph.prototype.isBright ? tick
-                : empty,
-            localize('Flat Bright')
-        ],
-        this.flatBrightLooks
-    );
     menu.addLine();
-    menu.addPreference(
-        'Flat design',
-        () => {
-            if (MorphicPreferences.isFlat) {
-                return this.defaultDesign();
-            }
-            this.flatDesign();
-        },
-        MorphicPreferences.isFlat,
-        'uncheck for default\nGUI design',
-        'check for alternative\nGUI design',
-        false
-    );
     menu.addPreference(
         'Bright theme',
         () => {
