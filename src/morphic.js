@@ -1398,7 +1398,7 @@ var standardSettings = {
     isTouchDevice: false, // turned on by touch events, don't set
     pngPayloadMarker: 'Data\tPayload\tEmbedded',
     rasterizeSVGs: false,
-    isFlat: false,
+    isFlat: true,
     grabThreshold: 5,
     showHoles: false
 };
@@ -1419,7 +1419,7 @@ var touchScreenSettings = {
     isTouchDevice: true,
     pngPayloadMarker: 'Data\tPayload\tEmbedded',
     rasterizeSVGs: false,
-    isFlat: false,
+    isFlat: true,
     grabThreshold: 5,
     showHoles: false
 };
