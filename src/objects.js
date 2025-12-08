@@ -3822,7 +3822,7 @@ SpriteMorph.prototype.blockTemplates = function (
         blocks.push(block('bubble'));
         blocks.push(block('doThinkFor'));
         blocks.push(block('doThink'));
-		blocks.push(block('bubbletext'));
+		blocks.push(block('returnBubble'));
         blocks.push('-');
         blocks.push(block('reportGetImageAttribute'));
         blocks.push(block('reportNewCostumeStretched'));
