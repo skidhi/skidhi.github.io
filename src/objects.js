@@ -674,7 +674,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
             code: 'think'
         },
         returnBubble: {
-            type: 'command',
+            type: 'reporter',
             category: 'looks',
             spec: 'bubble text',
             code: 'bubbletext'
