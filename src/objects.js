@@ -12018,9 +12018,6 @@ StageMorph.prototype.setColorRGBA =
 StageMorph.prototype.changeColorRGBA =
     SpriteMorph.prototype.changeColorRGBA;
 
-SpriteMorph.prototype.returnbubble = function () {var bubble = this.talkBubble(
-); return ((bubble instanceof SpeechBubbleMorph) ? bubble.data : '');}; /* Get contents. :) */
-
 StageMorph.prototype.setColor = function (aColor) {
     if (!this.color.eq(aColor, true)) { // observeAlpha
         this.color = aColor.copy();
