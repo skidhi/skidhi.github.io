@@ -5095,6 +5095,9 @@ Process.prototype.reportVariadicSum = function (numbers) {
     return this.reportListAggregation(numbers, 'reportSum');
 };
 
+Process.prototype.returnbubble = function () {var bubble = this.talkBubble(
+); return ((bubble instanceof SpeechBubbleMorph) ? bubble.data : '');}; /* Get contents. :) */
+
 Process.prototype.reportSum = function (a, b) {
     return this.hyper(this.reportBasicSum, a, b);
 };
