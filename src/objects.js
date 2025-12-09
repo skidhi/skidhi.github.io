@@ -7394,7 +7394,7 @@ SpriteMorph.prototype.talkBubble = function () {
     );
 };
 
-SpriteMorph.prototype.bubbletext = function () {var bubble = this.talkBubble(
+SpriteMorph.prototype.returnBubble = function () {var bubble = this.talkBubble(
 ); return ((bubble instanceof SpeechBubbleMorph) ? bubble.data : '');};
 
 SpriteMorph.prototype.positionTalkBubble = function () {
