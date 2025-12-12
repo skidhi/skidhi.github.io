@@ -2034,7 +2034,7 @@ SpriteMorph.prototype.primitiveBlocks = function () {
         },
         doDeclareVariables: {
             type: 'command',
-            category: 'other',
+            category: 'variables',
             spec: 'script variables %scriptVars',
             code: 'var'
         },
